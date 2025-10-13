@@ -1,4 +1,7 @@
-## A1 - Matt Dobaj - 20350312 - TA Group 1
+# A2 - Matt Dobaj - 20350312 - TA Group 1
+Github repo: [https://github.com/dobaj/cisc327-library-management-a2-0312](https://github.com/dobaj/cisc327-library-management-a2-0312)
+
+# Previous A1 Content
 
 function name | implementation status (complete/partial) | what is missing
 |---|---|---|
@@ -10,7 +13,7 @@ function name | implementation status (complete/partial) | what is missing
 | R6 Book Search Functionality | partial | Does not search through book catalog. Does not return books in the same format as the catalog display.
 | R7 Patron Status Report | partial | Does not display patron status with borrowed books, late fees, number of books borrowed, or borrowing history. There is also no menu option for showing the patron status in the main interface. 
 
-# Test Summary
+## Test Summary
 Requirement | Test Overview | Failed Tests
 --|--|--
 R1 Add Book | Tests for a variety of input handling cases involving no title, a title that is too long, no author, an invalid isbn number, and an invalid number of book copies. | Fails case where an ISBN containing letters is used. This fails the requirement where the ISBN should be 13 digits, not characters.
@@ -21,24 +24,26 @@ R5 Late Fee Calculation API | Tests that a late fee is not calculated for a book
 R6 Book Search Functionality | Tests for a search with an exact match for the title or isbn of a book, and the case insensitive partial match of the title or author of a book. Also tests the search for an isbn that no book is associated with. | Fails all tests as this requirement is not implemented.
 R7 Patron Status Report | Tests that the number of borrowed books is valid, that no books nor history are returned when no books have been borrowed, that the late fee for a borrowed book matches its expected value, and tests input handling for an invalid patron id. | Fails all tests as this requirement is not implemented.
 
-## A2 - Matt Dobaj - 20350312 - TA Group 1
-# Completed Function Implementations
+# New A2 Content
+Github repo: [https://github.com/dobaj/cisc327-library-management-a2-0312](https://github.com/dobaj/cisc327-library-management-a2-0312)
+
+## Completed Function Implementations
 
 To complete the R1 implementation, I simply added a check to ensure that the isbn contains only digits by seeing if it is parsable as an integer. No additional tests or modifications were required for this implementation change. 
 
-To complete the R3 implementation, I simply changed an if statement that checks if a user is over their borrow limit. Initially, it checked if the user has borrowed more than 5 books, and I changed it to check if they have borrowed 5 or more books. No additional tests or modifications were required for this implementation change. 
+To complete the R3 implementation, I simply changed an if statement that checks if a user is over their borrow limit. Initially, it checked if the user has borrowed more than 5 books and I changed it to check if they have borrowed 5 or more books. No additional tests or modifications were required for this implementation change. 
 
-To implement R5, I had to add checks to see if the patron id was valid, that the given book is currently borrowed by the patron, and then calculate the fees if the book ends up being overdue. I decided to truncate the due date to only include the date portion as it would make more sense from a functional standpoint; most libraries don't have due times, just dates. I had to slightly modify my tests to better represent actual books in the database by making the due dates 14 days after the borrow date. I also needed to change the text in a test case in order to match a more clear error message I implemented. I added an extra test case as well to verify that the fee calculation would align with the requirements, testing the boundary between the first week's per day cost and the cost per day afterwards. 
+To completely implement R5, I had to add checks to see if the patron id was valid, that the given book is currently borrowed by the patron, and then calculate the fees if the book ends up being overdue. I decided to truncate the due date to only include the date portion as it would make more sense from a functional standpoint; most libraries don't have due times, just dates. I had to slightly modify my tests to better represent actual books in the database by making the due dates 14 days after the borrow date. I also needed to change the text in a test case in order to match a more clear error message I implemented. I added an extra test case as well to verify that the fee calculation would align with the requirements, testing the combination of the first week's per day cost and the cost per day afterwards. 
 
-Implementing R4 required implementing R5 first in order to calculate late fees. All of the error checking was able to be copied from the late fees calculation function, which meant I just needed to then get the late fees, update the borrow record with the return date, and update the book's availability. Like in R5, I needed to change the text in a test case to match a new, more clear, error message. I also added two new test cases. One ensures that the late fees are properly calculated when returning a book that is overdue. The other ensures that a user can't return a single borrowed book twice, which could lead to incorrect behaviour. I also removed the incomplete disclaimer from the frontend.
+Completely implementing R4 required implementing R5 first in order to calculate late fees. All of the error checking was able to be copied from the late fees calculation function, which meant I just needed to then get the late fees, update the borrow record with the return date, and update the book's availability. Like in R5, I needed to change the text in a test case to match a new, more clear, error message. I also added two new test cases. One ensures that the late fees are properly calculated when returning a book that is overdue. The other ensures that a user can't return a single borrowed book twice, which could lead to incorrect behaviour. I also removed the incomplete disclaimer from the frontend.
 
-Implementing R6 required me to add two new functions to search the books database, one for titles and one for authors. I implemented partial case-insentive matching in these functions. The main function for R6 just returns results from either isbn, author, or title search based on the search_type. I also removed the incomplete disclaimer from the frontend.
+Completely implementing R6 required me to add two new functions to search the books database, one for titles and one for authors. I implemented partial case-insentive matching in these functions. The main function for R6 just returns results from either isbn, author, or title search based on the search_type. I also removed the incomplete disclaimer from the frontend.
 
-R7 required that I add a new database function to get a user's previously borrowed books. This was done by copying the get_patron_borrowed_books and checking for entries that have a return date. This return date is then passed to the frontend. I created a new page and routes for the patron status functionality. I also created a form to get the patron id using elements from the return books page and used table elements from the catalog page to show the patron's current and previously borrowed books. The tests required slight modifications as I changed the variable names in my api format. I also extended my testing by adding a new test to see if books properly move to the prev_books section after being returned and verifying that book ids match the results.
+To completely implement R7 I added a new database function to get a user's previously borrowed books. This was done by copying the get_patron_borrowed_books function and checking for entries that have a return date. This return date is then passed to the frontend. I then created a new page and routes for the patron status functionality. I also created a form to get the patron id using elements from the return books page and used table elements from the catalog page to show the patron's current and previously borrowed books. The tests required slight modifications as I changed the variable names in my api format. I also extended my testing by adding a new test to see if books properly move to the prev_books section after being returned and verifying that book ids match the results.
 
-# AI-Assisted Test Generation
+## AI-Assisted Test Generation
 
-I used the free tier of ChatGPT to generate test cases for the requirement specifications. I followed a generalized prompt that had the following prompt
+I used the free tier of ChatGPT to generate test cases for the requirement specifications. I cleared the chat context with each requirement and followed a generalized prompt that had the following prompt
 
 ```generate 4 pytest test cases for the requirement {{ Snippet from requirements_specification.md }} which uses this function: {{ Relevant functions definitions }}```
 
@@ -213,6 +218,7 @@ def test_catalog_mixed_availability(setup_database):
     assert len(unavailable_books) > 0
 ```
 
+
 For some reason ChatGPT performed significantly worse on this task. At first it kept trying to use packages that the project doesn't use to create a mock database and eventually settled on using placeholder functions for the mock database. The tests, like in R1, lack the depth required to properly test the functionality of the get_all_books() function, with one test simply testing if some books are unavailable vs. available. As this uses non-existent functions, it does not run.
 
 ### R3:
@@ -296,7 +302,7 @@ def test_successful_book_borrowing(mock_update_book_availability, mock_insert_bo
     assert "Due date" in message  # Ensure due date is included in the success message
 ```
 
-Overall ChatGPT performed well on this task, making use of (new to me) functions in pytest like mock return values. I felt that the tests in this instance contained the right amount of depth for this requirement. Because I only asked for 4 tests, it didn't fully cover the requirement's specifications, though. While it does use some hardcoded values, they aren't actually added to the database so as not to impact reusability. It doesn't appear to run perfectly, which may be on account of the mock values ChatGPT is using as the test to see if the patron is over their borrowing limit has a "Book not found" error. This implies that the function is trying to read from the actual database rather than ChatGPT's mock databases.
+Overall ChatGPT performed well on this task, making use of (new to me) functions in pytest like mock return values. I felt that the tests in this instance contained the right amount of depth for this requirement. Because I only asked for 4 tests, it didn't fully cover the requirement's specifications, though. While it does use some hardcoded values, they aren't actually added to the database so as not to impact reusability. It doesn't appear to run perfectly, which may be on account of the mock values ChatGPT is using because the test to see if the patron is over their borrowing limit has a "Book not found" error. This implies that the function is trying to read from the actual database rather than ChatGPT's mock databases.
 
 ### R4:
 ```
@@ -362,7 +368,7 @@ def test_return_book_invalid_patron_id():
     assert result[1] == "Invalid patron id."
 ```
 
-Here I found that ChatGPT did well conceptually, with good test coverage given the limited number of tests and good choices of scenarios to test. It does have some mistakes, however, like asserting incorrect late fees. Some mistakes are critical, like the fact the mock functions are not actually overriding the original functions as intended leading to incorrect test results. In this instancce, the return function is always failing.
+Here I found that ChatGPT did well conceptually, with good test coverage given the limited number of tests and good choices of scenarios to test. It does have some mistakes, however, like asserting incorrect late fees. Some mistakes are critical, like the fact the mock functions are not actually overriding the original functions as intended leading to incorrect test results. In this instancce, the return books function is always failing.
 
 ### R5:
 ```
@@ -591,6 +597,6 @@ Here I find ChatGPT didn't perform very well again. The mock functions it create
 
 ### Conclusions
 
-Overall I find that ChatGPT's free tier has issues with consistency. It sometimes captures the breadth of a requirement's specifications perfectly, like in R3 and R4, but at other times it appears to be in complete disagreement with what I found important in my test cases, like in R5 and R6. 
+Overall I find that ChatGPT's free tier has issues with consistency. It sometimes captures the breadth of a requirement's specifications perfectly, like in R3 and R4, but at other times it appears to be in complete disagreement with what I found important in my test cases, like in R5 and R6. Its tests also often checked for exact error messages where I would rather check for keywords or substrings in error messages to allow for some flexibility.
 
-Functionally all of ChatGPT's tests were flawed. Some requirements required only minor tweaks, like R1, however most tests did not run at all and would require extensive debugging to implement as their mock functions simply weren't working. Oftentimes this resulted in the tests running okay but the function they were testing appearing to be working incorrectly. This would cause the developer to incorrectly investigate the tested function to fix these errors instead of the tests.
+Functionally, all of ChatGPT's tests were flawed. Some requirements required only minor tweaks, like R1, however most tests did not perform correctly at all and would require extensive debugging to implement as their mock functions simply weren't working. Oftentimes this resulted in the tests running okay but the function they were testing would appear to be working incorrectly. This would cause the developer to incorrectly investigate the tested function to fix these errors instead of the tests.
