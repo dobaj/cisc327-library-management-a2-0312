@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>📖 Patron Status</h2>
+<p>Browse all current and previously borrowed books in our library collection.</p>
+
+
+<form method="POST" action="{{ url_for('status.status') }}">
+    <div class="form-group">
+        <label for="patron_id">Patron ID *</label>
+        <input type="text" id="patron_id" name="patron_id" pattern="[0-9]{6}" maxlength="6" required
+               value="{{ request.form.patron_id if request.form.patron_id else '' }}">
+        <small style="color: #666;">6-digit library card number</small>
+    </div>
+    
+    <div class="form-group">
+        <button type="submit" class="btn">🔍 Search</button>
+    </div>
+</form>
+
+{% if patron_id %}
+    <hr style="margin: 30px 0;">
+    
+    <h3>Search Results for Patron: {{ patron_id }}</h3>
+
+    <h4>Currently Borrowed Books</h4>
+    {% if curr_books %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Borrow Date</th>
+                <th>Due Date</th>
+                <th>Fees Due</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in curr_books %}
+            <tr>
+                <td>{{ book.book_id }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.borrow_date }}</td>
+                <td>{{ book.due_date }}</td>
+                <td>{{ book.fee_amount }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 40px; color: #666;">
+        <h3>No books to display</h3>
+    </div>
+    {% endif %}
+
+    <h4>Previously Borrowed Books</h4>
+    {% if prev_books %}
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Borrow Date</th>
+                <th>Return Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in prev_books %}
+            <tr>
+                <td>{{ book.book_id }}</td>
+                <td>{{ book.title }}</td>
+                <td>{{ book.author }}</td>
+                <td>{{ book.borrow_date }}</td>
+                <td>{{ book.return_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div style="text-align: center; padding: 40px; color: #666;">
+        <h3>No books to display</h3>
+    </div>
+    {% endif %}
+{% endif %}
+
+{% endblock %}
