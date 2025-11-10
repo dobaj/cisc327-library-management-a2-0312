@@ -1,7 +1,7 @@
-from library_service import (
+from services.library_service import (
     get_patron_status_report, return_book_by_patron
 )
-from tests.tools import borrow_book_helper, borrow_past_book_helper, digit_generator
+from tests.tools import borrow_book_helper, borrow_past_book_helper, digit_generator, invalidLateStub
 import pytest
 
 # Tests
@@ -81,3 +81,14 @@ def test_patron_status_late_fee():
     assert report is not None
     assert "curr_books" in report and len(report["curr_books"]) > 0
     assert report["curr_books"][0]["fee_amount"] == "15.00"
+
+def test_patron_status_books_borrowed_late_error(mocker):
+    """Test the returned borrowed books when getting a patron status with an invalid response from calc late fees."""
+    invalidLateStub(mocker)
+    patron, id = borrow_book_helper()
+
+    report = get_patron_status_report(patron)
+    
+    assert report is not None
+    assert "status" in report
+    assert "error calculating" in report["status"].lower()

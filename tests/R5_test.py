@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import pytest
 from database import insert_borrow_record
-from library_service import calculate_late_fee_for_book
+from services.library_service import calculate_late_fee_for_book
 from tests.tools import add_book_helper, borrow_past_book_helper, digit_generator
 
 

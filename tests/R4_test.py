@@ -1,8 +1,8 @@
 from database import get_book_by_id
-from library_service import (
+from services.library_service import (
     borrow_book_by_patron, return_book_by_patron
 )
-from tests.tools import add_book_helper, borrow_book_helper, borrow_past_book_helper, digit_generator
+from tests.tools import add_book_helper, borrow_book_helper, borrow_past_book_helper, digit_generator, invalidLateStub, updateAvailFalse, updateBorrowFalse
 
 # Tests
 
@@ -12,6 +12,7 @@ def test_return_book_valid():
 
     success, message = return_book_by_patron(patron, id)
     assert success == True
+    assert "successful" in message.lower()
 
 def test_return_book_invalid_twice():
     """Test returning a book with valid input twice."""
@@ -19,9 +20,11 @@ def test_return_book_invalid_twice():
 
     success, message = return_book_by_patron(patron, id)
     assert success == True
+    assert "successful" in message.lower()
 
     success, message = return_book_by_patron(patron, id)
     assert success == False
+    assert "not borrowed" in message.lower()
 
 def test_return_book_valid_overdue():
     """Test returning a book with valid input."""
@@ -58,3 +61,32 @@ def test_return_book_invalid_invalid_book_id():
     success, message = return_book_by_patron(patron, id)
     assert success == False
     assert "invalid" in message
+
+def test_return_book_late_error(mocker):
+    """Test returning a book with an invalid response from calc late fees."""
+    invalidLateStub(mocker)
+    patron, id = borrow_book_helper()
+
+    success, message = return_book_by_patron(patron, id)
+    assert success == False
+    assert "error occured" in message.lower()
+
+
+def test_return_book_update_borrow_error(mocker):
+    """Test returning a book with an update borrow db error."""
+    updateBorrowFalse(mocker)
+    patron, id = borrow_book_helper()
+
+    success, message = return_book_by_patron(patron, id)
+    assert success == False
+    assert "database error" in message.lower()
+
+def test_return_book_availability_error(mocker):
+    """Test returning a book with an availability db error."""
+    patron, id = borrow_book_helper()
+    
+    updateAvailFalse(mocker)
+
+    success, message = return_book_by_patron(patron, id)
+    assert success == False
+    assert "database error" in message.lower()

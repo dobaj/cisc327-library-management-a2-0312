@@ -1,4 +1,4 @@
-from library_service import add_book_to_catalog, search_books_in_catalog
+from services.library_service import add_book_to_catalog, search_books_in_catalog
 from tests.tools import digit_generator
 
 # Tests

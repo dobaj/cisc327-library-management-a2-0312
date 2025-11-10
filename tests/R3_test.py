@@ -1,5 +1,5 @@
-from library_service import borrow_book_by_patron
-from tests.tools import add_book_helper, digit_generator
+from services.library_service import borrow_book_by_patron
+from tests.tools import add_book_helper, digit_generator, insertBorrowFalse, updateAvailFalse
 
 # Tests
 
@@ -10,6 +10,7 @@ def test_borrow_book_valid():
 
     success, message = borrow_book_by_patron(patron, id)
     assert success == True
+    assert "successfully" in message.lower()
 
 def test_borrow_book_invalid_patron_too_long():
     """Test borrowing a book with a patron id that is too long."""
@@ -59,3 +60,23 @@ def test_borrow_book_invalid_invalid_book_id():
     success, message = borrow_book_by_patron(patron, id)
     assert success == False
     assert "not found" in message
+
+def test_borrow_book_insert_db_error(mocker):
+    """Test borrowing a book with an insert db error."""
+    insertBorrowFalse(mocker)
+    id = add_book_helper()
+    patron = digit_generator(6)
+
+    success, message = borrow_book_by_patron(patron, id)
+    assert success == False
+    assert "database error" in message.lower()
+
+def test_borrow_book_availability_db_error(mocker):
+    """Test borrowing a book with an update availability db error."""
+    updateAvailFalse(mocker)
+    id = add_book_helper()
+    patron = digit_generator(6)
+
+    success, message = borrow_book_by_patron(patron, id)
+    assert success == False
+    assert "database error" in message.lower()

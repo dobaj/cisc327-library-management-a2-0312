@@ -1,12 +1,10 @@
 from database import get_all_books
-from library_service import (
+from services.library_service import (
     add_book_to_catalog,
     borrow_book_by_patron
 )
 from tests.tools import digit_generator
 
-
-### New tests
 
 def test_get_new_book_valid():
     """Test getting a recently added book from the database."""

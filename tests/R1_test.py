@@ -1,7 +1,7 @@
-from library_service import (
+from services.library_service import (
     add_book_to_catalog
 )
-from tests.tools import digit_generator
+from tests.tools import digit_generator, insertBookFalse
 
 def test_add_book_valid_input():
     """Test adding a book with valid input."""
@@ -40,6 +40,13 @@ def test_add_book_invalid_no_author():
     assert success == False
     assert "Author" in message
 
+def test_add_book_invalid_author_too_long():
+    """Test adding a book with an author's name that's too long."""
+    success, message = add_book_to_catalog("Test Book", "a"*200, "1234567893123", 5)
+    
+    assert success == False
+    assert "Author" in message
+
 def test_add_book_invalid_isbn_too_long():
     """Test adding a book with an ISBN that is too long."""
     success, message = add_book_to_catalog("Test Book", "Test Author", "12345678901234", 5)
@@ -67,3 +74,21 @@ def test_add_book_invalid_string_copies():
     
     assert success == False
     assert "Total" in message
+
+def test_add_book_duplicate():
+    """Test adding a book with valid input twice."""
+    isbn = digit_generator()
+    success, message = add_book_to_catalog("Test Book", "Test Author", isbn, 5)
+    success, message = add_book_to_catalog("Test Book", "Test Author", isbn, 5)
+    
+    assert success == False
+    assert "already exists" in message.lower()
+
+def test_add_book_db_error(mocker):
+    """Test adding a book with a database error."""
+    insertBookFalse(mocker)
+    isbn = digit_generator()
+    success, message = add_book_to_catalog("Test Book", "Test Author", isbn, 5)
+    
+    assert success == False
+    assert "database error" in message.lower()
