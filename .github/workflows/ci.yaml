@@ -33,6 +33,9 @@ jobs:
 
       - name: Setup DB
         run: python ./test_init.py
+
+      - name: Setup Playwright
+        run: playwright install
       
       - name: Run pytest
         run: pytest
