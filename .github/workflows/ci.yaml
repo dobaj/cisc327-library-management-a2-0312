@@ -38,6 +38,8 @@ jobs:
         run: playwright install
       
       - name: Run pytest
-        run: pytest
+        run: |
+        python app.py &
+        pytest
     
 

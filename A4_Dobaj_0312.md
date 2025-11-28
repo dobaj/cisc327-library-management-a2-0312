@@ -11,13 +11,9 @@ The add/borrow test first asserted that the add book page was reached from the h
 The status/return test required the use of one of my previously made helper functions to borrow a book before the test began. It asserted that the borrowed book was present in the currently borrowed table and that the return success confirmation is shown to the user after returning the book. 
 
 # Section 3 - Execution Instructions 
-You can run all tests using:
-
-```pytest```
-
-or you can run just the end to end tests using:
-
-```pytest .\tests\test_e2e.py```
+The tests require the server to be running, which can be done either with:
+```python app.py```
+or by running the docker container.
 
 To run the container, you can use the command:
 
@@ -26,6 +22,14 @@ To run the container, you can use the command:
 or if you built it yourself:
 
 ```docker run -p 5000:5000 library-app```
+
+You can run all tests using:
+
+```pytest```
+
+or you can run just the end to end tests using:
+
+```pytest .\tests\test_e2e.py```
 
 # Section 4 - Test Case Summary 
 Test Function Name | Expected Results
